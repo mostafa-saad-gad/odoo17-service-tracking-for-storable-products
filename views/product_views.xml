@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_invoice_policy_inherit_sale_project_consu" model="ir.ui.view">
+        <field name="name">product.template.inherit.sale.projectform.consu</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale_project.product_template_form_view_invoice_policy_inherit_sale_project"/>
+        <field name="arch" type="xml">
+
+            <field name="invoice_policy" position="attributes">
+                <attribute name="invisible">type != 'consu' and sale_ok == True</attribute>
+            </field>
+
+            <field name="service_policy" position="attributes">
+                <attribute name="invisible">type == 'consu' or sale_ok == False</attribute>
+                <attribute name="required">type != 'consu' and sale_ok == True</attribute>
+            </field>
+
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible">type == 'consu' or not sale_ok</attribute>
+                <attribute name="required">1</attribute>
+            </field>
+
+            <field name="project_id" position="attributes">
+                <attribute name="invisible">type == 'consu' or service_tracking != 'task_global_project'</attribute>
+                <attribute name="required">service_tracking == 'task_global_project'</attribute>
+            </field>
+
+            <field name="project_template_id" position="attributes">
+                <attribute name="invisible">type == 'consu' or service_tracking not in ['task_in_project', 'project_only']</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
