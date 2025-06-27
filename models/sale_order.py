@@ -153,3 +153,25 @@ class SaleOrder(models.Model):
                                             precision_digits=precision
                                         ) > 0
                                         )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Create the orders normally
+        created_records = super().create(vals_list)
+
+        # Handle project logic (sale_line_id + project.name)
+        project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
+        if project:
+            for order in created_records:
+                # Find a valid sale order line (service or product)
+                valid_sol = next(
+                    (sol for sol in order.order_line if sol.product_id.type in ['service', 'product']), False
+                )
+                if not valid_sol:
+                    raise UserError(_('This Sales Order must contain at least one product of type "Service" or "Product".'))
+
+                # Assign sale_line_id if not already set
+                if not project.sale_line_id:
+                    project.sale_line_id = valid_sol
+
+        return created_records
