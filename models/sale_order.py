@@ -9,17 +9,6 @@ from odoo.tools import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    sequence_only_name = fields.Char(string='Sequence Only', compute='_compute_sequence_only_name', store=False)
-
-    @api.depends('name')
-    def _compute_sequence_only_name(self):
-        for order in self:
-            if order.name:
-                # Split at the first '-' and take the first part
-                order.sequence_only_name = order.name.split('-', 1)[0]
-            else:
-                order.sequence_only_name = ''
-
     def _compute_show_project_and_task_button(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
 
@@ -164,44 +153,3 @@ class SaleOrder(models.Model):
                                             precision_digits=precision
                                         ) > 0
                                         )
-
-
-    from odoo import fields  # Make sure this is imported
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'company_id' in vals:
-                self = self.with_company(vals['company_id'])
-
-            # Generate name if "New"
-            if vals.get('name', _("New")) == _("New"):
-                seq_date = fields.Datetime.context_timestamp(
-                    self, fields.Datetime.to_datetime(vals['date_order'])
-                ) if 'date_order' in vals else None
-
-                seq = self.env['ir.sequence'].next_by_code(
-                    'sale.order', sequence_date=seq_date
-                ) or _("New")
-
-                partner_name = ''
-                if 'partner_id' in vals:
-                    partner = self.env['res.partner'].browse(vals['partner_id'])
-                    partner_name = partner.name or ''
-
-                vals['name'] = f"{seq}-{partner_name}" if partner_name else seq
-
-        created_records = super().create(vals_list)
-
-        # Handle project sale_line_id assignment
-        project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
-        if project:
-            for order in created_records:
-                valid_sol = next(
-                    (sol for sol in order.order_line if sol.product_id.type in ['service', 'product']), False)
-                if not valid_sol:
-                    raise UserError(_('This Sales Order must contain at least one product of type "Service" or "Product".'))
-                if not project.sale_line_id:
-                    project.sale_line_id = valid_sol
-
-        return created_records

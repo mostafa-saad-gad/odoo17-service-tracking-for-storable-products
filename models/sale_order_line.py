@@ -163,10 +163,14 @@ class SaleOrderLine(models.Model):
                 uom_factor = project_uom.factor * factor_inv_per_id[line.product_uom.id]
                 allocated_hours += line.product_uom_qty * uom_factor
 
+        # Custom name formatting: SOname - Customer : Product
+        new_project_name = f"{self.order_id.name} - {self.order_id.partner_id.name} : {self.product_id.name}"
         project.write({
             'allocated_hours': allocated_hours,
             'allow_timesheets': True,
+            'name': new_project_name,
         })
+
         return project
 
     def _recompute_qty_to_invoice(self, start_date, end_date):
