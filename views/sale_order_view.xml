@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_order_tree_inherit" model="ir.ui.view">
+      <field name="name">sale.order.tree.inherit.sequence_only</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.sale_order_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="replace">
+          <field name="sequence_only_name" string="Number"/>
+        </xpath>
+      </field>
+    </record>
+</odoo>

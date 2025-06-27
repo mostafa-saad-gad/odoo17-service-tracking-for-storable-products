@@ -9,6 +9,17 @@ from odoo.tools import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    sequence_only_name = fields.Char(string='Sequence Only', compute='_compute_sequence_only_name', store=False)
+
+    @api.depends('name')
+    def _compute_sequence_only_name(self):
+        for order in self:
+            if order.name:
+                # Split at the first '-' and take the first part
+                order.sequence_only_name = order.name.split('-', 1)[0]
+            else:
+                order.sequence_only_name = ''
+
     def _compute_show_project_and_task_button(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
 

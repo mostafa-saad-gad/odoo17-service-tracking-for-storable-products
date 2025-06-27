@@ -26,6 +26,7 @@ It extends functionality across the following core modules:
     ],
     'data': [
         'views/product_views.xml',
+        'views/sale_order_view.xml'
     ],
     'installable': True,
     'application': False,
