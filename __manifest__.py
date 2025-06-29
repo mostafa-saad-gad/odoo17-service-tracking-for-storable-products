@@ -1,5 +1,5 @@
 {
-    'name': 'Product Service Behavior Extension',
+    'name': 'Storable Product as Service',
     'version': '17.0.1.0.0',
     'summary': 'Extends storable product functionality to behave like service products',
     'description': """
