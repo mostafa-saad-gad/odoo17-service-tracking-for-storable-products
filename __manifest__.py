@@ -1,6 +1,7 @@
 {
     'name': 'Storable Product as Service',
     'version': '17.0.1.0.0',
+    'summary' : 'Add a product service feature',
     'category': 'Sales',
     'author': 'Mostafa Saad',
     'depends': [
