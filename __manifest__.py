@@ -1,20 +1,6 @@
 {
     'name': 'Storable Product as Service',
     'version': '17.0.1.0.0',
-    'summary': 'Extends storable product functionality to behave like service products',
-    'description': """
-This module customizes Odoo to allow storable products (type='product') to support features typically exclusive to service products:
-- Project and task creation on sales
-- Timesheet tracking and invoicing
-- Custom sale order naming with customer name (e.g., S00039-Customer-Name)
-- Enhanced tooltip and invoice policy behavior
-
-It extends functionality across the following core modules:
-- sale
-- sale_project
-- sale_timesheet
-- project
-    """,
     'category': 'Sales',
     'author': 'Mostafa Saad',
     'depends': [
@@ -26,6 +12,13 @@ It extends functionality across the following core modules:
     ],
     'data': [
         'views/product_views.xml',
+    ],
+'images': [
+        'static/description/icon.png',
+        'static/description/project_task.jpg',
+        'static/description/sale_order_item.jpg',
+        'static/description/storable_product.jpg',
+        'static/description/analytic_account.jpg',
     ],
     'installable': True,
     'application': False,
